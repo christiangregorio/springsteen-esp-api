@@ -2,6 +2,9 @@ package com.example.springsteen_esp.models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -10,9 +13,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 50, nullable = false, unique = true)
     private String username;
+
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
+
+    @Column(length = 100, nullable = false)
     private String password;
+
+    // Relación N:M de usuarios asisten a conciertos.
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserConcertAttendance> attendances = new ArrayList<>();
 
     public User() {}
 
@@ -33,4 +45,7 @@ public class User {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public List<UserConcertAttendance> getAttendances() { return attendances; }
+    public void setAttendances(List<UserConcertAttendance> attendances) { this.attendances = attendances; }
 }

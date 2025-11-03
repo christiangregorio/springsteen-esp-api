@@ -2,6 +2,8 @@ package com.example.springsteen_esp.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "concerts")
@@ -12,10 +14,26 @@ public class Concert {
     private Long id;
 
     private LocalDate date;
+
+    @Column(length = 100)
     private String city;
+
+    @Column(length = 100)
     private String venue;
+
+    @Column(length = 100)
     private String tour;
+
+    @Column(length = 20)
     private String duration;
+
+    // Relación N:M de concierto y usuarios que asisten.
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserConcertAttendance> attendances = new ArrayList<>();
+
+    // Relación 1:N con canciones (setlist)
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Song> songs = new ArrayList<>();
 
     public Concert() {}
 
@@ -44,4 +62,10 @@ public class Concert {
 
     public String getDuration() { return duration; }
     public void setDuration(String duration) { this.duration = duration; }
+
+    public List<UserConcertAttendance> getAttendances() { return attendances; }
+    public void setAttendances(List<UserConcertAttendance> attendances) { this.attendances = attendances; }
+
+    public List<Song> getSongs() { return songs; }
+    public void setSongs(List<Song> songs) { this.songs = songs; }
 }

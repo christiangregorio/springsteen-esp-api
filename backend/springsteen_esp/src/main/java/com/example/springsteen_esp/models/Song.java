@@ -10,9 +10,13 @@ public class Song {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int position; // Orden en el setlist
-    private String title; // Título de la canción
+    @Column(nullable = false)
+    private int position;
 
+    @Column(length = 200, nullable = false)
+    private String title;
+
+    // Relación 1:N con Concert.
     @ManyToOne
     @JoinColumn(name = "concert_id", nullable = false)
     private Concert concert;
