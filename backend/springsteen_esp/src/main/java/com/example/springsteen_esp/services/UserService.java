@@ -73,4 +73,9 @@ public class UserService {
         }
         return songsHeard;
     }
+
+    public boolean login(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        return user != null && user.getPassword().equals(password);
+    }
 }

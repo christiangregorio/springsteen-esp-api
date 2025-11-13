@@ -21,7 +21,7 @@ public class ConcertService {
     }
 
     public List<Concert> list() {
-        return concertRepository.findAll();
+        return concertRepository.findAllByOrderByDateDesc();
     }
 
     public Concert get(Long id) {
@@ -36,7 +36,7 @@ public class ConcertService {
         concertRepository.deleteById(id);
     }
 
-    // Agregar una canción a un concierto
+    // Agregar una canción a un concierto existente
     public Concert addSong(Long concertId, Song song) {
         Concert concert = get(concertId);
         if (concert != null) {
@@ -58,7 +58,15 @@ public class ConcertService {
         return null;
     }
 
-    // Obtener canciones ordenadas por posición
+    public Concert removeSongById(Long concertId, Long songId) {
+        Concert concert = concertRepository.findById(concertId).orElse(null);
+        if (concert == null) return null;
+
+        concert.getSongs().removeIf(song -> song.getId().equals(songId));
+        return concertRepository.save(concert);
+    }
+
+    // Obtener canciones del concierto ordenadas por posición
     public List<Song> getSongsOrdered(Long concertId) {
         Concert concert = get(concertId);
         if (concert == null) return List.of();
@@ -68,7 +76,7 @@ public class ConcertService {
         return orderedSongs;
     }
 
-    // Obtener todos los asistentes de un concierto
+    // Obtener todos los asistentes de un concierto en concreto
     public List<User> getAttendees(Long concertId) {
         Concert concert = get(concertId);
         if (concert == null) {
